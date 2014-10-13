@@ -1,11 +1,6 @@
 # Report of the activity monitoring
 
 
-```{r working_dir, echo=FALSE}
-setwd("~/Coursera/data_science_specialization/reproducible_research/RepData1")
-```
-
-
 ## Loading and preprocessing the data
 
 ```{r loading_data}
