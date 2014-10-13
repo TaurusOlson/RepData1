@@ -1,0 +1,47 @@
+# Report of the activity monitoring
+
+
+```{r working_dir, echo=FALSE}
+setwd("~/Coursera/data_science_specialization/reproducible_research/RepData1")
+```
+
+
+## Loading and preprocessing the data
+
+```{r loading_data}
+activity <- read.csv("data/activity.csv")
+
+# Format the date column properly
+activity$date <- as.Date(activity$date, format="%Y-%m-%d")
+```
+
+
+## Mean total number of steps taken per day
+
+Before calculating the total number of steps per day, we select only the rows containing data:
+
+```{r remove_nan}
+activity_subset <- subset(activity, !is.na(steps))
+```
+
+Now we group the data by day.
+
+```{r sum_total_steps}
+steps_per_day <- aggregate(steps ~ date, data=activity_subset, sum, na.rm=TRUE)
+barplot(steps_per_day$steps, main="Total number of steps per day", ylab="Count", xlab="Date", col="seagreen")
+```
+
+
+```{r mean_total_steps}
+mean_steps_per_day <- aggregate(steps ~ date, data=activity_subset, mean, na.rm=TRUE)
+print(mean_steps_per_day)
+```
+
+
+```{r median_total_steps}
+median_steps_per_day <- aggregate(steps ~ date, data=activity_subset, median, na.rm=TRUE)
+print(median_steps_per_day)
+```
+
+
+## Average daily activity pattern
