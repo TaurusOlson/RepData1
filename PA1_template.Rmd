@@ -13,30 +13,41 @@ activity$date <- as.Date(activity$date, format="%Y-%m-%d")
 
 ## Mean total number of steps taken per day
 
-Before calculating the total number of steps per day, we select only the rows containing data:
-
-```{r remove_nan}
-activity_subset <- subset(activity, !is.na(steps))
-```
-
-Now we group the data by day.
+We group the data by day and sum the steps, removing missing values:
 
 ```{r sum_total_steps}
-steps_per_day <- aggregate(steps ~ date, data=activity_subset, sum, na.rm=TRUE)
-barplot(steps_per_day$steps, main="Total number of steps per day", ylab="Count", xlab="Date", col="seagreen")
+steps_per_day <- aggregate(steps ~ date, data=activity, sum, na.rm=TRUE)
+plot(steps_per_day$steps, main="Total number of steps per day", ylab="Count", xlab="Date", col="seagreen", type="h")
+
 ```
 
+We calculate the mean and the median of the total number of steps per day:
 
-```{r mean_total_steps}
-mean_steps_per_day <- aggregate(steps ~ date, data=activity_subset, mean, na.rm=TRUE)
-print(mean_steps_per_day)
+```{r mean_and_median}
+mean_steps_per_day <- mean(steps_per_day$steps)
+median_steps_per_day <- median(steps_per_day$steps)
 ```
 
-
-```{r median_total_steps}
-median_steps_per_day <- aggregate(steps ~ date, data=activity_subset, median, na.rm=TRUE)
-print(median_steps_per_day)
-```
+* Mean total number of steps taken per day: `r sprintf("%.2f", mean_steps_per_day)`
+* Median total number of steps taken per day: `r sprintf("%.2f", median_steps_per_day)`
 
 
 ## Average daily activity pattern
+
+```{r average_daily_activity}
+avg_daily_steps <- aggregate(steps ~ interval, data=activity, mean, na.rm = T)
+plot(avg_daily_steps, type="l", main="Average daily steps", 
+     ylab="Number of steps", xlab="5-minute intervals")
+
+max_steps <- subset(avg_daily_steps, steps == max(avg_daily_steps$steps))
+```
+
+The maximum number of steps (`r max_steps$steps`), on average accross all the days in the dataset occurs in the interval `r max_steps$interval`.
+
+
+## Imputing missing values
+```{r missing_values}
+nb_missing_values <- nrow(subset(activity, is.na(steps)))
+```
+
+There are `r nb_missing_values` missing values in the dataset.
