@@ -17,8 +17,8 @@ We group the data by day and sum the steps, removing missing values:
 
 ```{r sum_total_steps}
 steps_per_day <- aggregate(steps ~ date, data=activity, sum, na.rm=TRUE)
-plot(steps_per_day$steps, main="Total number of steps per day", ylab="Count", xlab="Date", col="seagreen", type="h")
-
+hist(steps_per_day$steps, xlab="Number of steps", breaks=10, 
+     col="seagreen", main="Total number of steps taken each day")
 ```
 
 We calculate the mean and the median of the total number of steps per day:
@@ -46,8 +46,15 @@ The maximum number of steps (`r max_steps$steps`), on average accross all the da
 
 
 ## Imputing missing values
+
 ```{r missing_values}
-nb_missing_values <- nrow(subset(activity, is.na(steps)))
+missing_values <- subset(activity, is.na(steps))
+nb_missing_values <- nrow(missing_values)
 ```
+
+Our strategy for imputing mussing values:
+
+* Identify the missing values in the dataset
+* Replace these values by the average number of steps per day for the corresponding 5-minute interval.  
 
 There are `r nb_missing_values` missing values in the dataset.
